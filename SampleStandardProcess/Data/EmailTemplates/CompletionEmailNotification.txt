@@ -1,0 +1,12 @@
+Dear Team,
+
+The ProcessName finished due to no more transaction data.
+
+Kind Regards,
+
+ProcessName
+Helpathome Robotics
+
+Please note that this is an RPA generated email, do not reply to it.
+For processing and scheduling enquiries, please contact oajisafe@helpathome.com
+For other enquiries, please contact aabraham@helpathome.com, mnehas@helpathome.com
