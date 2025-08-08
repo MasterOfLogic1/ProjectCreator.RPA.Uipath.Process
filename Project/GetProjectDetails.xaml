@@ -1,16 +1,16 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="GetProjectDetails" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ufa="clr-namespace:UiPath.Forms.Activities;assembly=UiPath.Forms.Activities" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="readmeContents" Type="OutArgument(x:String)" />
-    <x:Property Name="selectedNameOfProject" Type="OutArgument(x:String)" />
-    <x:Property Name="selectedGithubRepoName" Type="OutArgument(x:String)" />
-    <x:Property Name="selectedQueueName" Type="OutArgument(x:String)" />
+    <x:Property Name="projectName" Type="OutArgument(x:String)" />
+    <x:Property Name="githubRepoName" Type="OutArgument(x:String)" />
+    <x:Property Name="queueName" Type="OutArgument(x:String)" />
     <x:Property Name="shouldCreateQueue" Type="OutArgument(x:String)" />
-    <x:Property Name="queueShouldUseReference" Type="OutArgument(x:String)" />
-    <x:Property Name="clickedCreateButton" Type="OutArgument(x:String)" />
-    <x:Property Name="clickedCancelButton" Type="OutArgument(x:String)" />
-    <x:Property Name="processDescriptionProvided" Type="OutArgument(x:String)" />
+    <x:Property Name="shouldUseUniqueQueueReference" Type="OutArgument(x:String)" />
+    <x:Property Name="createButton" Type="OutArgument(x:String)" />
+    <x:Property Name="cancelButton" Type="OutArgument(x:String)" />
+    <x:Property Name="processDescription" Type="OutArgument(x:String)" />
     <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
-    <x:Property Name="selectedOrchestratorFolder" Type="OutArgument(x:String)" />
+    <x:Property Name="orchestratorFolder" Type="OutArgument(x:String)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
@@ -55,8 +55,10 @@
       <x:String>UiPath.Sdk.Activities</x:String>
       <x:String>UiPath.Sdk.Activities.DependencyInjection</x:String>
       <x:String>UiPath.Sdk.Activities.DependencyInjection.Contracts</x:String>
-      <x:String>Newtonsoft.Json.Linq</x:String>
       <x:String>System.Activities.Runtime.Collections</x:String>
+      <x:String>Newtonsoft.Json</x:String>
+      <x:String>UiPath.Platform.Triggers</x:String>
+      <x:String>UiPath.Platform.Triggers.Scope</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -113,44 +115,72 @@
       <AssemblyReference>System.Linq.Parallel</AssemblyReference>
       <AssemblyReference>System.Collections.Immutable</AssemblyReference>
       <AssemblyReference>System.Linq.Queryable</AssemblyReference>
+      <AssemblyReference>System.IO.FileSystem.Watcher</AssemblyReference>
+      <AssemblyReference>System.IO.Packaging</AssemblyReference>
+      <AssemblyReference>System.IO.FileSystem.AccessControl</AssemblyReference>
+      <AssemblyReference>System.IO.FileSystem.DriveInfo</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="GetProjectDetails" sap:VirtualizedContainerService.HintSize="1060.8000000000002,4078.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="GetProjectDetails" sap:VirtualizedContainerService.HintSize="1288,2187" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:Object" Name="formCache" />
+    </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence sap:VirtualizedContainerService.HintSize="747.2,4055.2" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <Sequence sap:VirtualizedContainerService.HintSize="512,2164" sap2010:WorkflowViewState.IdRef="Sequence_2">
       <Sequence.Variables>
         <Variable x:TypeArguments="scg:List(x:String)" Name="existingProcesses" />
         <Variable x:TypeArguments="scg:List(x:String)" Name="listOfOrchestratorFolders" />
+        <Variable x:TypeArguments="x:String" Name="companyName" />
+        <Variable x:TypeArguments="x:String" Name="rpaLocalRepository" />
       </Sequence.Variables>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <Assign sap:VirtualizedContainerService.HintSize="713.6,113.6" sap2010:WorkflowViewState.IdRef="Assign_4">
-        <Assign.To>
-          <OutArgument x:TypeArguments="scg:List(x:String)">[listOfOrchestratorFolders]</OutArgument>
-        </Assign.To>
-        <Assign.Value>
-          <InArgument x:TypeArguments="scg:List(x:String)">[in_Config("StringListOfOrchestratorFolders").ToString().Split(","c).ToList()]</InArgument>
-        </Assign.Value>
-      </Assign>
-      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="GetOrchestratorArtifacts - Invoke Workflow File (GetOrchestratorArtifacts.xaml)" sap:VirtualizedContainerService.HintSize="713.6,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Project\GetOrchestratorArtifacts.xaml">
+      <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_5">
+        <ui:MultipleAssign.AssignOperations>
+          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_13">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[rpaLocalRepository]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[in_Config("RpaLocalRepositoryFolder").ToString()]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_15">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="scg:List(x:String)">[listOfOrchestratorFolders]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="scg:List(x:String)">[in_Config("StringListOfOrchestratorFolders").ToString().Split(","c).ToList()]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+          </scg:List>
+        </ui:MultipleAssign.AssignOperations>
+      </ui:MultipleAssign>
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="First we get orchestrator artifacts which includes the existing processes on the ochestartor as well as all other information" DisplayName="GetOrchestratorArtifacts" sap:VirtualizedContainerService.HintSize="478,238" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Project\GetOrchestratorArtifacts.xaml">
         <ui:InvokeWorkflowFile.Arguments>
           <OutArgument x:TypeArguments="scg:List(x:String)" x:Key="processNames">[existingProcesses]</OutArgument>
           <InArgument x:TypeArguments="scg:List(x:String)" x:Key="in_ListOfOrchestratorFolders">[listOfOrchestratorFolders]</InArgument>
         </ui:InvokeWorkflowFile.Arguments>
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
       </ui:InvokeWorkflowFile>
-      <ui:MultipleAssign DisplayName="Initialize Variables" sap:VirtualizedContainerService.HintSize="713.6,242.4" sap2010:WorkflowViewState.IdRef="MultipleAssign_4">
+      <ui:MultipleAssign sap2010:Annotation.AnnotationText="Initialize variables that would be needed to load form" DisplayName="Initialize Variables" sap:VirtualizedContainerService.HintSize="478,335" sap2010:WorkflowViewState.IdRef="MultipleAssign_4">
         <ui:MultipleAssign.AssignOperations>
           <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
             <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_7">
               <ui:AssignOperation.To>
-                <OutArgument x:TypeArguments="x:String">[selectedNameOfProject]</OutArgument>
+                <OutArgument x:TypeArguments="x:String">[projectName]</OutArgument>
               </ui:AssignOperation.To>
               <ui:AssignOperation.Value>
                 <InArgument x:TypeArguments="x:String">
@@ -160,7 +190,7 @@
             </ui:AssignOperation>
             <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_8">
               <ui:AssignOperation.To>
-                <OutArgument x:TypeArguments="x:String">[processDescriptionProvided]</OutArgument>
+                <OutArgument x:TypeArguments="x:String">[processDescription]</OutArgument>
               </ui:AssignOperation.To>
               <ui:AssignOperation.Value>
                 <InArgument x:TypeArguments="x:String">
@@ -170,7 +200,7 @@
             </ui:AssignOperation>
             <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_9">
               <ui:AssignOperation.To>
-                <OutArgument x:TypeArguments="x:String">[clickedCancelButton]</OutArgument>
+                <OutArgument x:TypeArguments="x:String">[cancelButton]</OutArgument>
               </ui:AssignOperation.To>
               <ui:AssignOperation.Value>
                 <InArgument x:TypeArguments="x:String">false</InArgument>
@@ -178,36 +208,64 @@
             </ui:AssignOperation>
             <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_10">
               <ui:AssignOperation.To>
-                <OutArgument x:TypeArguments="x:String">[clickedCreateButton]</OutArgument>
+                <OutArgument x:TypeArguments="x:String">[createButton]</OutArgument>
               </ui:AssignOperation.To>
               <ui:AssignOperation.Value>
                 <InArgument x:TypeArguments="x:String">false</InArgument>
               </ui:AssignOperation.Value>
             </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_11">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:String">[companyName]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:String">[in_Config("CompanyName").ToString()]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
+            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_12">
+              <ui:AssignOperation.To>
+                <OutArgument x:TypeArguments="x:Object">[formCache]</OutArgument>
+              </ui:AssignOperation.To>
+              <ui:AssignOperation.Value>
+                <InArgument x:TypeArguments="x:Object" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"projectName", ""},
+    {"orchestratorFolder", ""},
+    {"processDescription", ""},
+    {"shouldCreateQueue", ""},
+    {"shouldUseUniqueQueueReference", ""}
+}]</InArgument>
+              </ui:AssignOperation.Value>
+            </ui:AssignOperation>
           </scg:List>
         </ui:MultipleAssign.AssignOperations>
-      </ui:MultipleAssign>
-      <ufa:ShowFormActivity Height="{x:Null}" InstanceName="{x:Null}" Left="{x:Null}" ShowInTaskbar="{x:Null}" ShowMargin="{x:Null}" Title="{x:Null}" Top="{x:Null}" TopMost="{x:Null}" Width="{x:Null}" WindowState="{x:Null}" sap2010:Annotation.AnnotationText="This show Form activity Shows a form in which user can provide the details of the RPA project they would want to create" DisplayName="Show Form" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="713.6,279.2" sap2010:WorkflowViewState.IdRef="ShowFormActivity_1" IsAsync="True">
-        <ufa:ShowFormActivity.Arguments>
-          <InArgument x:TypeArguments="s:String[]" x:Key="existingProcesses">[existingProcesses.ToArray()]</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="test">yes</InArgument>
-          <InArgument x:TypeArguments="scg:List(x:String)" x:Key="OrchestratorFoldersDropdownList">[listOfOrchestratorFolders]</InArgument>
-        </ufa:ShowFormActivity.Arguments>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
+      </ui:MultipleAssign>
+      <ufa:ShowFormActivity Height="{x:Null}" InstanceName="{x:Null}" Left="{x:Null}" ShowInTaskbar="{x:Null}" ShowMargin="{x:Null}" Top="{x:Null}" TopMost="{x:Null}" Width="{x:Null}" DisplayName="Show Form" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,221" sap2010:WorkflowViewState.IdRef="ShowFormActivity_2" IsAsync="True" Title="RPA Project Creator" WindowState="[UiPath.Studio.Forms.Runtime.WindowState.Maximized]">
+        <ufa:ShowFormActivity.Arguments>
+          <InArgument x:TypeArguments="x:String" x:Key="formLabel">[companyName+" RPA Project Creator"]</InArgument>
+          <InArgument x:TypeArguments="scg:IEnumerable(x:String)" x:Key="OrchestratorFolder.Items">[listOfOrchestratorFolders]</InArgument>
+          <InArgument x:TypeArguments="scg:List(x:String)" x:Key="existingProcesses">[existingProcesses.ToList()]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="showSpinner">false</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">false</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">true</InArgument>
+        </ufa:ShowFormActivity.Arguments>
       </ufa:ShowFormActivity>
-      <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="713.6,172.8" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_7">
+      <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,174" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_8">
         <ufa:SetFormFieldsActivity.Arguments>
-          <InArgument x:TypeArguments="x:String" x:Key="showMainPanel">true</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="ShouldCreateQueueRadio">false</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="shouldCreateQueue">true</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">true</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="shouldUseUniqueQueueReference">true</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="showSpinner">false</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">false</InArgument>
         </ufa:SetFormFieldsActivity.Arguments>
       </ufa:SetFormFieldsActivity>
-      <ui:InterruptibleDoWhile CurrentIndex="{x:Null}" sap2010:Annotation.AnnotationText="3.) This do while acvity While waiting for the user to click Create or Cancel " Condition="[Not (clickedCreateButton.ToLower().Equals(&quot;true&quot;) Or clickedCancelButton.ToLower().Equals(&quot;true&quot;))]" DisplayName="Do While" sap:VirtualizedContainerService.HintSize="713.6,2822.4" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_1">
+      <ui:InterruptibleDoWhile CurrentIndex="{x:Null}" sap2010:Annotation.AnnotationText="3.) This do while acvity While waiting for the user to click Create or Cancel " Condition="[Not (createButton.ToLower().Equals(&quot;true&quot;) Or cancelButton.ToLower().Equals(&quot;true&quot;))]" DisplayName="Do While" sap:VirtualizedContainerService.HintSize="478,767" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_2">
         <ui:InterruptibleDoWhile.Body>
-          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="680,2644.8" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="450,591" sap2010:WorkflowViewState.IdRef="Sequence_3">
             <Sequence.Variables>
               <Variable x:TypeArguments="x:String" Name="wasValidPascalCase" />
               <Variable x:TypeArguments="x:String" Name="externalFormError" />
@@ -217,19 +275,21 @@
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ufa:GetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Get Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="646.4,172.8" sap2010:WorkflowViewState.IdRef="GetFormFieldsActivity_2">
+            <ufa:GetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Get Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="416,174" sap2010:WorkflowViewState.IdRef="GetFormFieldsActivity_3">
               <ufa:GetFormFieldsActivity.Arguments>
-                <OutArgument x:TypeArguments="x:String" x:Key="NameOfProjectField">[selectedNameOfProject]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="GithubRepoName">[selectedGithubRepoName]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="QueueName">[selectedQueueName]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="ShouldCreateQueueRadio">[shouldCreateQueue]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="QueueUniqueReferenceRadio">[queueShouldUseReference]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="CreateButton">[clickedCreateButton]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="CancelButton">[clickedCancelButton]</OutArgument>
-                <OutArgument x:TypeArguments="x:String" x:Key="processDescriptionProvided">[processDescriptionProvided]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="ProjectName">[projectName]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="OrchestratorFolder">[orchestratorFolder]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="ProcessDescription">[processDescription]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="GithubRepoName">[githubRepoName]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="QueueName">[queueName]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="shouldCreateQueue">[shouldCreateQueue]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="shouldUseUniqueQueueReference">[shouldUseUniqueQueueReference]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="CreateButton">[createButton]</OutArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="CancelButton">[cancelButton]</OutArgument>
+                <OutArgument x:TypeArguments="x:Object" x:Key="FormCache">[formCache]</OutArgument>
               </ufa:GetFormFieldsActivity.Arguments>
             </ufa:GetFormFieldsActivity>
-            <If sap2010:Annotation.AnnotationText="turn off main panel because create button is clicked" Condition="[clickedCreateButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="646.4,128.8" sap2010:WorkflowViewState.IdRef="If_5">
+            <If sap2010:Annotation.AnnotationText="turn off main panel because create button is clicked and send cached data back to form " Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="416,102" sap2010:WorkflowViewState.IdRef="If_5">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -238,24 +298,38 @@
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
               <If.Then>
-                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,224" sap2010:WorkflowViewState.IdRef="Sequence_22">
+                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="468,341" sap2010:WorkflowViewState.IdRef="Sequence_22">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="382.4,164" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_3">
+                  <Assign sap:VirtualizedContainerService.HintSize="434,116" sap2010:WorkflowViewState.IdRef="Assign_5">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Object">[formCache]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Object" xml:space="preserve">[New Dictionary(Of String, Object) From {
+    {"projectName", projectName},
+    {"orchestratorFolder", orchestratorFolder},
+    {"processDescription", processDescription},
+    {"shouldCreateQueue", shouldCreateQueue},
+    {"shouldUseUniqueQueueReference", shouldUseUniqueQueueReference}
+}]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="434,165" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_9">
                     <ufa:SetFormFieldsActivity.Arguments>
-                      <InArgument x:TypeArguments="x:String" x:Key="showMainPanel">false</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="NameOfProjectField">[selectedNameOfProject]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="processDescriptionProvided">[processDescriptionProvided]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="OrchestratorFoldersDropdownList">[selectedOrchestratorFolder]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">false</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="ProjectName">[projectName]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="showSpinner">true</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">false</InArgument>
                     </ufa:SetFormFieldsActivity.Arguments>
                   </ufa:SetFormFieldsActivity>
                 </Sequence>
               </If.Then>
               <If.Else>
-                <Sequence sap2010:Annotation.AnnotationText="" DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,120.8" sap2010:WorkflowViewState.IdRef="Sequence_23">
+                <Sequence sap2010:Annotation.AnnotationText="" DisplayName="Else" sap:VirtualizedContainerService.HintSize="468,121" sap2010:WorkflowViewState.IdRef="Sequence_23">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -265,22 +339,90 @@
                 </Sequence>
               </If.Else>
             </If>
-            <If sap2010:Annotation.AnnotationText="Validate pascal case for naming convention" Condition="[clickedCreateButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="646.4,1280.8" sap2010:WorkflowViewState.IdRef="If_2">
+            <If sap2010:Annotation.AnnotationText="Check if a local folder is present with same name" Condition="[Directory.Exists(Path.Combine(rpaLocalRepository,projectName)) AndAlso createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="416,88" sap2010:WorkflowViewState.IdRef="If_6">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
                   <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
               <If.Then>
-                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="612.8,989.6" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,436" sap2010:WorkflowViewState.IdRef="Sequence_25">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <Sequence sap2010:Annotation.AnnotationText="Validate pascal case for naming convention" sap:VirtualizedContainerService.HintSize="579.2,929.6" sap2010:WorkflowViewState.IdRef="Sequence_8">
+                  <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478,211" sap2010:WorkflowViewState.IdRef="MultipleAssign_6">
+                    <ui:MultipleAssign.AssignOperations>
+                      <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_16">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:String">[cancelButton]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:String">false</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_17">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:String">[createButton]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:String">false</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                        <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_18">
+                          <ui:AssignOperation.To>
+                            <OutArgument x:TypeArguments="x:String">[externalFormError]</OutArgument>
+                          </ui:AssignOperation.To>
+                          <ui:AssignOperation.Value>
+                            <InArgument x:TypeArguments="x:String">["A folder with name ["+projectName+"] already exists in ["+ rpaLocalRepository+"]. please delete or relocate"]</InArgument>
+                          </ui:AssignOperation.Value>
+                        </ui:AssignOperation>
+                      </scg:List>
+                    </ui:MultipleAssign.AssignOperations>
+                  </ui:MultipleAssign>
+                  <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,165" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_12">
+                    <ufa:SetFormFieldsActivity.Arguments>
+                      <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">true</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="CreateButton">[createButton]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="CancelButton">[cancelButton]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="externalFormError">[externalFormError]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="ProjectName">[ProjectName]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="showSpinner">false</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">false</InArgument>
+                    </ufa:SetFormFieldsActivity.Arguments>
+                  </ufa:SetFormFieldsActivity>
+                </Sequence>
+              </If.Then>
+              <If.Else>
+                <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="512,90" sap2010:WorkflowViewState.IdRef="Sequence_26">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                </Sequence>
+              </If.Else>
+            </If>
+            <If sap2010:Annotation.AnnotationText="Validate pascal case for naming convention" Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="416,88" sap2010:WorkflowViewState.IdRef="If_2">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <If.Then>
+                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="582,918" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <Sequence sap2010:Annotation.AnnotationText="Validate pascal case for naming convention" sap:VirtualizedContainerService.HintSize="548,858" sap2010:WorkflowViewState.IdRef="Sequence_8">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -288,7 +430,7 @@
                         <x:Boolean x:Key="IsPinned">False</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                    <TryCatch sap2010:Annotation.AnnotationText="Use gen ai to validate naming convention" DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="545.6,128.8" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+                    <TryCatch sap2010:Annotation.AnnotationText="Use gen ai to validate naming convention" DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="514,88" sap2010:WorkflowViewState.IdRef="TryCatch_1">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -314,7 +456,7 @@
 "- No underscores, dashes, or spaces allowed." &amp; vbCrLf &amp; _
 "- If it's a single word or doesn't follow the rules, return false." &amp; vbCrLf &amp; vbCrLf &amp; _
 "- If unsure, always return FALSE." &amp; vbCrLf &amp; vbCrLf &amp; _
-"Text: "+ selectedNameOfProject]</InArgument>
+"Text: "+ projectName]</InArgument>
                               <OutArgument x:TypeArguments="x:String" x:Key="generativeAiResponse">[wasValidPascalCase]</OutArgument>
                             </ui:InvokeWorkflowFile.Arguments>
                           </ui:InvokeWorkflowFile>
@@ -373,7 +515,7 @@
                         </Sequence>
                       </TryCatch.Finally>
                     </TryCatch>
-                    <If sap2010:Annotation.AnnotationText="Reset if error" Condition="[Not String.IsNullOrEmpty(externalFormError)]" sap:VirtualizedContainerService.HintSize="545.6,686.4" sap2010:WorkflowViewState.IdRef="If_1">
+                    <If sap2010:Annotation.AnnotationText="Reset if error" Condition="[Not String.IsNullOrEmpty(externalFormError)]" sap:VirtualizedContainerService.HintSize="514,656" sap2010:WorkflowViewState.IdRef="If_1">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -382,18 +524,18 @@
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
                       <If.Then>
-                        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,404" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                        <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,405" sap2010:WorkflowViewState.IdRef="Sequence_4">
                           <sap:WorkflowViewStateService.ViewState>
                             <scg:Dictionary x:TypeArguments="x:String, x:Object">
                               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                             </scg:Dictionary>
                           </sap:WorkflowViewStateService.ViewState>
-                          <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478.4,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
+                          <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
                             <ui:MultipleAssign.AssignOperations>
                               <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
                                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
                                   <ui:AssignOperation.To>
-                                    <OutArgument x:TypeArguments="x:String">[clickedCancelButton]</OutArgument>
+                                    <OutArgument x:TypeArguments="x:String">[cancelButton]</OutArgument>
                                   </ui:AssignOperation.To>
                                   <ui:AssignOperation.Value>
                                     <InArgument x:TypeArguments="x:String">false</InArgument>
@@ -401,7 +543,7 @@
                                 </ui:AssignOperation>
                                 <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_4">
                                   <ui:AssignOperation.To>
-                                    <OutArgument x:TypeArguments="x:String">[clickedCreateButton]</OutArgument>
+                                    <OutArgument x:TypeArguments="x:String">[createButton]</OutArgument>
                                   </ui:AssignOperation.To>
                                   <ui:AssignOperation.Value>
                                     <InArgument x:TypeArguments="x:String">false</InArgument>
@@ -410,20 +552,21 @@
                               </scg:List>
                             </ui:MultipleAssign.AssignOperations>
                           </ui:MultipleAssign>
-                          <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478.4,164" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_1">
+                          <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,165" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_10">
                             <ufa:SetFormFieldsActivity.Arguments>
+                              <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">true</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="CreateButton">[createButton]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="CancelButton">[cancelButton]</InArgument>
                               <InArgument x:TypeArguments="x:String" x:Key="externalFormError">[externalFormError]</InArgument>
-                              <InArgument x:TypeArguments="x:String" x:Key="CreateButton">[clickedCreateButton]</InArgument>
-                              <InArgument x:TypeArguments="x:String" x:Key="CancelButton">[clickedCancelButton]</InArgument>
-                              <InArgument x:TypeArguments="x:String" x:Key="NameOfProjectField">[selectedNameOfProject]</InArgument>
-                              <InArgument x:TypeArguments="x:String" x:Key="processDescriptionProvided">[processDescriptionProvided]</InArgument>
-                              <InArgument x:TypeArguments="x:String" x:Key="showMainPanel">true</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="ProjectName">[ProjectName]</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="showSpinner">false</InArgument>
+                              <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">false</InArgument>
                             </ufa:SetFormFieldsActivity.Arguments>
                           </ufa:SetFormFieldsActivity>
                         </Sequence>
                       </If.Then>
                       <If.Else>
-                        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                        <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="512,90" sap2010:WorkflowViewState.IdRef="Sequence_5">
                           <sap:WorkflowViewStateService.ViewState>
                             <scg:Dictionary x:TypeArguments="x:String, x:Object">
                               <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -436,7 +579,7 @@
                 </Sequence>
               </If.Then>
               <If.Else>
-                <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="582,90" sap2010:WorkflowViewState.IdRef="Sequence_7">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -445,22 +588,22 @@
                 </Sequence>
               </If.Else>
             </If>
-            <If sap2010:Annotation.AnnotationText="use gen ai to generate readme contents " Condition="[clickedCreateButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="646.4,1002.4" sap2010:WorkflowViewState.IdRef="If_3">
+            <If sap2010:Annotation.AnnotationText="use gen ai to generate readme contents " Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="416,79" sap2010:WorkflowViewState.IdRef="If_3">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
               <If.Then>
-                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="486.4,720" sap2010:WorkflowViewState.IdRef="Sequence_15">
+                <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="504,859" sap2010:WorkflowViewState.IdRef="Sequence_15">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <TryCatch sap2010:Annotation.AnnotationText="use gen ai to generate readme contents " DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="452.8,552.8" sap2010:WorkflowViewState.IdRef="TryCatch_3">
+                  <TryCatch sap2010:Annotation.AnnotationText="use gen ai to generate readme contents " DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="470,720" sap2010:WorkflowViewState.IdRef="TryCatch_3">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -469,16 +612,16 @@
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
                     <TryCatch.Try>
-                      <Sequence sap2010:Annotation.AnnotationText="use gen ai to generate readme contents " DisplayName="Try" sap:VirtualizedContainerService.HintSize="416,258.4" sap2010:WorkflowViewState.IdRef="Sequence_17">
+                      <Sequence sap2010:Annotation.AnnotationText="use gen ai to generate readme contents " DisplayName="Try" sap:VirtualizedContainerService.HintSize="468,259" sap2010:WorkflowViewState.IdRef="Sequence_17">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="PromptGeminiGenerativeAI" sap:VirtualizedContainerService.HintSize="382.4,167.2" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="Project\PromptGeminiGenerativeAI.xaml">
+                        <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="PromptGeminiGenerativeAI" sap:VirtualizedContainerService.HintSize="434,168" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="Project\PromptGeminiGenerativeAI.xaml">
                           <ui:InvokeWorkflowFile.Arguments>
-                            <InArgument x:TypeArguments="x:String" x:Key="aiPrompt">[File.ReadAllText("Data\PromptToGenerateReadme.txt").Replace("NewProcessDescription",processDescriptionProvided)]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="aiPrompt">[File.ReadAllText("Data\PromptToGenerateReadme.txt").Replace("NewProcessDescription",processDescription)]</InArgument>
                             <OutArgument x:TypeArguments="x:String" x:Key="generativeAiResponse">[readmeContents]</OutArgument>
                           </ui:InvokeWorkflowFile.Arguments>
                         </ui:InvokeWorkflowFile>
@@ -495,13 +638,13 @@
                           <ActivityAction.Argument>
                             <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
                           </ActivityAction.Argument>
-                          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="467.2,164.8" sap2010:WorkflowViewState.IdRef="Sequence_18">
+                          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,166" sap2010:WorkflowViewState.IdRef="Sequence_18">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Assign sap:VirtualizedContainerService.HintSize="433.6,104.8" sap2010:WorkflowViewState.IdRef="Assign_3">
+                            <Assign sap:VirtualizedContainerService.HintSize="434,106" sap2010:WorkflowViewState.IdRef="Assign_3">
                               <Assign.To>
                                 <OutArgument x:TypeArguments="x:String">[externalFormError]</OutArgument>
                               </Assign.To>
@@ -514,7 +657,7 @@
                       </Catch>
                     </TryCatch.Catches>
                     <TryCatch.Finally>
-                      <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="467.2,89.6" sap2010:WorkflowViewState.IdRef="Sequence_19">
+                      <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="468,90" sap2010:WorkflowViewState.IdRef="Sequence_19">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -523,7 +666,7 @@
                       </Sequence>
                     </TryCatch.Finally>
                   </TryCatch>
-                  <If sap2010:Annotation.AnnotationText="Reset if error" Condition="[Not String.IsNullOrEmpty(externalFormError)]" sap:VirtualizedContainerService.HintSize="452.8,107.2" sap2010:WorkflowViewState.IdRef="If_4">
+                  <If sap2010:Annotation.AnnotationText="Reset if error" Condition="[Not String.IsNullOrEmpty(externalFormError)]" sap:VirtualizedContainerService.HintSize="470,79" sap2010:WorkflowViewState.IdRef="If_4">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -532,18 +675,18 @@
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
                     <If.Then>
-                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,404" sap2010:WorkflowViewState.IdRef="Sequence_20">
+                      <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,405" sap2010:WorkflowViewState.IdRef="Sequence_20">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
-                        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478.4,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_3">
+                        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_3">
                           <ui:MultipleAssign.AssignOperations>
                             <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
                               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_5">
                                 <ui:AssignOperation.To>
-                                  <OutArgument x:TypeArguments="x:String">[clickedCancelButton]</OutArgument>
+                                  <OutArgument x:TypeArguments="x:String">[cancelButton]</OutArgument>
                                 </ui:AssignOperation.To>
                                 <ui:AssignOperation.Value>
                                   <InArgument x:TypeArguments="x:String">false</InArgument>
@@ -551,7 +694,7 @@
                               </ui:AssignOperation>
                               <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_6">
                                 <ui:AssignOperation.To>
-                                  <OutArgument x:TypeArguments="x:String">[clickedCreateButton]</OutArgument>
+                                  <OutArgument x:TypeArguments="x:String">[createButton]</OutArgument>
                                 </ui:AssignOperation.To>
                                 <ui:AssignOperation.Value>
                                   <InArgument x:TypeArguments="x:String">false</InArgument>
@@ -560,20 +703,22 @@
                             </scg:List>
                           </ui:MultipleAssign.AssignOperations>
                         </ui:MultipleAssign>
-                        <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478.4,164" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_2">
+                        <ufa:SetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,165" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_11">
                           <ufa:SetFormFieldsActivity.Arguments>
+                            <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">true</InArgument>
+                            <InArgument x:TypeArguments="x:Object" x:Key="FormCache">[formCache]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="CreateButton">[createButton]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="CancelButton">[cancelButton]</InArgument>
                             <InArgument x:TypeArguments="x:String" x:Key="externalFormError">[externalFormError]</InArgument>
-                            <InArgument x:TypeArguments="x:String" x:Key="CreateButton">[clickedCreateButton]</InArgument>
-                            <InArgument x:TypeArguments="x:String" x:Key="CancelButton">[clickedCancelButton]</InArgument>
-                            <InArgument x:TypeArguments="x:String" x:Key="NameOfProjectField">[selectedNameOfProject]</InArgument>
-                            <InArgument x:TypeArguments="x:String" x:Key="processDescriptionProvided">[processDescriptionProvided]</InArgument>
-                            <InArgument x:TypeArguments="x:String" x:Key="showMainPanel">true</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="ProjectName">[ProjectName]</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">false</InArgument>
+                            <InArgument x:TypeArguments="x:String" x:Key="showSpinner">false</InArgument>
                           </ufa:SetFormFieldsActivity.Arguments>
                         </ufa:SetFormFieldsActivity>
                       </Sequence>
                     </If.Then>
                     <If.Else>
-                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_16">
+                      <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="512,90" sap2010:WorkflowViewState.IdRef="Sequence_16">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -585,7 +730,7 @@
                 </Sequence>
               </If.Then>
               <If.Else>
-                <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_21">
+                <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="504,90" sap2010:WorkflowViewState.IdRef="Sequence_21">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -604,7 +749,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </ui:InterruptibleDoWhile>
-      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="713.6,165.6" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;initilaized&quot;]" />
+      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="478,166" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info" Message="[&quot;initilaized&quot;]" />
     </Sequence>
   </Sequence>
 </Activity>

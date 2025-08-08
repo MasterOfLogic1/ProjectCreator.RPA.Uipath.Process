@@ -14,8 +14,8 @@
     "components": [
       {
         "tag": "h1",
-        "content": "HAH RPA Project Creator",
-        "key": "label",
+        "content": "Standard Project Creator",
+        "key": "formLabel",
         "input": false,
         "tableView": false,
         "label": "Label",
@@ -43,8 +43,10 @@
         "input": true,
         "defaultValue": {
           "projectName": "",
-          "description": "",
-          "createQueue": ""
+          "orchestratorFolder": "",
+          "processDescription": "",
+          "shouldCreateQueue": "",
+          "shouldUseUniqueQueueReference": ""
         },
         "tableView": false
       },
@@ -71,12 +73,13 @@
                 "tableView": false
               },
               {
-                "title": "",
+                "title": "InputPanel",
                 "collapsible": false,
-                "key": "mainpanel",
+                "hideLabel": true,
+                "key": "InputPanel",
                 "conditional": {
                   "show": true,
-                  "when": "showMainPanel",
+                  "when": "showInputPanel",
                   "eq": "true"
                 },
                 "type": "panel",
@@ -90,14 +93,15 @@
                     "tableView": true,
                     "validate": {
                       "required": true,
-                      "custom": "valid = /^[A-Z][a-zA-Z0-9 ]*$/.test(input) && !/(robot|automation|process)/i.test(input) && (!data.existingProcesses || !data.existingProcesses.includes(input));",
-                      "customMessage": "Must start with a capital letter. Only letters, numbers, and spaces allowed. Do not include 'robot', 'automation', or 'process'."
+                      "customMessage": "Must start with a capital letter. Only letters, numbers, and spaces allowed. Do not include 'robot', 'automation', or 'process'.",
+                      "custom": "valid = /^[A-Z][a-zA-Z0-9 ]*$/.test(input) && !/(robot|automation|process)/i.test(input) && (!data.existingProcesses || !data.existingProcesses.includes(input));"
                     },
-                    "key": "NameOfProjectField",
+                    "key": "ProjectName",
                     "type": "textfield",
                     "input": true,
-                    "calculateValue": "value = data.FormCache && data.FormCache.projectName ? data.FormCache.projectName : '';",
-                    "refreshOnChange": true
+                    "calculateValue": "data.FormCache && data.FormCache.projectName ? data.FormCache.projectName : data.ProjectName",
+                    "refreshOnChange": true,
+                    "calculateOnLoad": true
                   },
                   {
                     "label": "Orchestrator Folder",
@@ -106,7 +110,7 @@
                     "validate": {
                       "required": true
                     },
-                    "key": "OrchestratorFoldersDropdownList",
+                    "key": "OrchestratorFolder",
                     "type": "select",
                     "input": true
                   },
@@ -116,7 +120,7 @@
                     "validate": {
                       "required": true
                     },
-                    "key": "processDescriptionProvided",
+                    "key": "ProcessDescription",
                     "logic": [
                       {
                         "name": "Cache form data",
@@ -143,28 +147,28 @@
                   {
                     "label": "GitHub Repository Name",
                     "placeholder": "Will be auto-filled as ProjectName.RPA.Uipath.Process",
+                    "disabled": true,
                     "tableView": true,
                     "key": "GithubRepoName",
                     "type": "textfield",
                     "input": true,
-                    "disabled": true,
-                    "calculateValue": "value = data.NameOfProjectField ? data.NameOfProjectField + '.RPA.Uipath.Process' : '';"
+                    "calculateValue": "value = data.ProjectName ? data.ProjectName + '.RPA.Uipath.Process' : '';"
                   },
                   {
                     "label": "Queue Name",
                     "placeholder": "Will be auto-filled as ProjectNameQueue",
+                    "disabled": true,
                     "tableView": true,
                     "key": "QueueName",
                     "type": "textfield",
                     "input": true,
-                    "disabled": true,
-                    "calculateValue": "value = data.NameOfProjectField ? data.NameOfProjectField + 'Queue' : '';"
+                    "calculateValue": "value = data.ProjectName ? data.ProjectName + 'Queue' : '';"
                   },
                   {
                     "type": "content",
                     "label": "Project Summary",
                     "key": "projectSummary",
-                    "html": "{{ data.NameOfProjectField ? '<strong>Expected Credential Asset Name:</strong> ' + data.NameOfProjectField + '_SampleAppLoginCredential<br><strong>Expected Storage Bucket:</strong> ' + data.NameOfProjectField + 'Bucket' : '' }}",
+                    "html": "{{ data.ProjectName ? '<strong>Expected Credential Asset Name:</strong> ' + data.ProjectName + '_SampleAppLoginCredential<br><strong>Expected Storage Bucket:</strong> ' + data.ProjectName + 'Bucket' : '' }}",
                     "refreshOnChange": true,
                     "input": false,
                     "tableView": false
@@ -191,7 +195,7 @@
                                 "shortcut": ""
                               }
                             ],
-                            "key": "ShouldCreateQueueRadio",
+                            "key": "shouldCreateQueue",
                             "type": "radio",
                             "input": true
                           }
@@ -223,10 +227,10 @@
                                 "shortcut": ""
                               }
                             ],
-                            "key": "QueueUniqueReferenceRadio",
+                            "key": "shouldUseUniqueQueueReference",
                             "conditional": {
                               "show": true,
-                              "when": "ShouldCreateQueueRadio",
+                              "when": "shouldCreateQueue",
                               "eq": "true"
                             },
                             "type": "radio",
@@ -261,9 +265,9 @@
                             "tableView": false,
                             "key": "CreateButton",
                             "type": "button",
-                            "input": true,
                             "event": "custom",
-                            "custom": "data.FormCache = { projectName: data.NameOfProjectField, description: data.processDescriptionProvided };"
+                            "input": true,
+                            "custom": "data.FormCache = {\r\n  projectName: data.ProjectName,\r\n  orchestratorFolder: data.OrchestratorFolder,\r\n  processDescription: data.ProcessDescription,\r\n  shouldCreateQueue: data.shouldCreateQueue,\r\n  shouldUseUniqueQueueReference: data.shouldUseUniqueQueueReference\r\n};"
                           }
                         ],
                         "width": 6,
@@ -304,16 +308,61 @@
                 ]
               },
               {
+                "title": "CompletePanel",
+                "collapsible": false,
+                "hideLabel": true,
+                "key": "CompletePanel",
+                "conditional": {
+                  "show": true,
+                  "when": "showCompletion",
+                  "eq": "true"
+                },
+                "type": "panel",
+                "label": "Panel",
+                "input": false,
+                "tableView": false,
+                "components": [
+                  {
+                    "tag": "h2",
+                    "content": "\"Successfully Created\"",
+                    "key": "label",
+                    "input": false,
+                    "tableView": false,
+                    "label": "Label",
+                    "type": "label"
+                  },
+                  {
+                    "type": "content",
+                    "label": "Project Summary",
+                    "key": "projectSummary1",
+                    "html": "{{ data.ProjectName ? '<strong>Expected Credential Asset Name:</strong> ' + data.ProjectName + '_SampleAppLoginCredential<br><strong>Expected Storage Bucket:</strong> ' + data.ProjectName + 'Bucket' : '' }}",
+                    "refreshOnChange": true,
+                    "input": false,
+                    "tableView": false
+                  },
+                  {
+                    "label": "Ok",
+                    "action": "custom",
+                    "showValidations": false,
+                    "theme": "info",
+                    "tableView": false,
+                    "key": "ok",
+                    "type": "button",
+                    "input": true
+                  }
+                ]
+              },
+              {
                 "collapsible": false,
                 "hidden": true,
                 "key": "loadingPanel",
                 "conditional": {
                   "show": true,
-                  "when": "showMainPanel",
-                  "eq": "false"
+                  "when": "showSpinner",
+                  "eq": "true"
                 },
                 "type": "",
-                "label": "Loading...",
+                "label": "Creating...",
                 "input": false,
                 "tableView": false,
                 "style": {
@@ -333,8 +382,22 @@
                 ]
               },
               {
-                "label": "",
-                "key": "showMainPanel",
+                "label": "showInputPanel",
+                "key": "showInputPanel",
+                "type": "hidden",
+                "input": true,
+                "tableView": false
+              },
+              {
+                "label": "showCompletePanel",
+                "key": "showCompletePanel",
+                "type": "hidden",
+                "input": true,
+                "tableView": false
+              },
+              {
+                "label": "showSpinner",
+                "key": "showSpinner",
                 "type": "hidden",
                 "input": true,
                 "tableView": false
