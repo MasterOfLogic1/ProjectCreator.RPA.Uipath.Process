@@ -90,7 +90,7 @@
       <AssemblyReference>System.IO.FileSystem.DriveInfo</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1288,2721" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1338,2809" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="externalFormError" />
     </Sequence.Variables>
@@ -99,7 +99,7 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence sap:VirtualizedContainerService.HintSize="548,2698" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <Sequence sap:VirtualizedContainerService.HintSize="548,2786" sap2010:WorkflowViewState.IdRef="Sequence_2">
       <Sequence.Variables>
         <Variable x:TypeArguments="x:String" Name="projectDescription" />
         <Variable x:TypeArguments="x:String" Name="queueName" />
@@ -150,7 +150,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </ui:InvokeWorkflowFile>
-      <If sap2010:Annotation.AnnotationText="1.) Instntiate and setup project repository&#xD;&#xA;&#xD;&#xA;2.) Create queue needed by the target process" Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="514,2041" sap2010:WorkflowViewState.IdRef="If_1">
+      <If sap2010:Annotation.AnnotationText="1.) Instntiate and setup project repository&#xD;&#xA;&#xD;&#xA;2.) Create queue needed by the target process" Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="514,2129" sap2010:WorkflowViewState.IdRef="If_1">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -159,13 +159,14 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
         <If.Then>
-          <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,1751" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,1839" sap2010:WorkflowViewState.IdRef="Sequence_3">
             <Sequence.Variables>
               <Variable x:TypeArguments="x:String" Name="localRepoPath" />
               <Variable x:TypeArguments="x:String" Name="githubOrganizationName" />
               <Variable x:TypeArguments="x:String" Name="githubUsername" />
               <Variable x:TypeArguments="x:String" Name="githubPersonalAccessToken" />
               <Variable x:TypeArguments="x:String" Name="GithubCreateRepoApiUri" />
+              <Variable x:TypeArguments="x:String" Name="OkayButton" />
             </Sequence.Variables>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -322,7 +323,7 @@
                       <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Starts by createing the repo in git hub&#xD;&#xA;initialize repo in local &#xD;&#xA;and pushing to remote url" DisplayName="PushToGithub " sap:VirtualizedContainerService.HintSize="434,229" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="PushToGithub.xaml">
+                  <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Starts by createing the repo in git hub&#xD;&#xA;initialize repo in local &#xD;&#xA;and pushing to remote url" DisplayName="PushToGithub " sap:VirtualizedContainerService.HintSize="434,229" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="SetupGithubRepository.xaml">
                     <ui:InvokeWorkflowFile.Arguments>
                       <InArgument x:TypeArguments="x:String" x:Key="localRepoPath">[localRepoPath]</InArgument>
                       <InArgument x:TypeArguments="x:String" x:Key="githubOrganizationName">[githubOrganizationName]</InArgument>
@@ -374,7 +375,7 @@
                 </Sequence>
               </TryCatch.Finally>
             </TryCatch>
-            <ufa:SetFormFieldsActivity InstanceName="{x:Null}" sap2010:Annotation.AnnotationText="Show completion page" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,196" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_1">
+            <ufa:SetFormFieldsActivity InstanceName="{x:Null}" sap2010:Annotation.AnnotationText="Show completion page" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,205" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_1">
               <ufa:SetFormFieldsActivity.Arguments>
                 <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">false</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="ProjectName">[projectName]</InArgument>
@@ -388,6 +389,33 @@
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
             </ufa:SetFormFieldsActivity>
+            <ui:InterruptibleDoWhile CurrentIndex="{x:Null}" sap2010:Annotation.AnnotationText="Wait for okay button" DisplayName="Do While" sap:VirtualizedContainerService.HintSize="452,386" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_1">
+              <ui:InterruptibleDoWhile.Body>
+                <Sequence sap2010:Annotation.AnnotationText="Wait for okay button" DisplayName="Body" sap:VirtualizedContainerService.HintSize="450,256" sap2010:WorkflowViewState.IdRef="Sequence_15">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <ufa:GetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Get Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="416,165" sap2010:WorkflowViewState.IdRef="GetFormFieldsActivity_1">
+                    <ufa:GetFormFieldsActivity.Arguments>
+                      <OutArgument x:TypeArguments="x:String" x:Key="OkayButton">[OkayButton]</OutArgument>
+                    </ufa:GetFormFieldsActivity.Arguments>
+                  </ufa:GetFormFieldsActivity>
+                </Sequence>
+              </ui:InterruptibleDoWhile.Body>
+              <ui:InterruptibleDoWhile.Condition>
+                <VisualBasicValue x:TypeArguments="x:Boolean" DisplayName="Visual basic value" ExpressionText="Not OkayButton.Equals(&quot;true&quot;)" />
+              </ui:InterruptibleDoWhile.Condition>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+            </ui:InterruptibleDoWhile>
           </Sequence>
         </If.Then>
         <If.Else>

@@ -314,7 +314,7 @@
                 "key": "CompletePanel",
                 "conditional": {
                   "show": true,
-                  "when": "showCompletion",
+                  "when": "showCompletePanel",
                   "eq": "true"
                 },
                 "type": "panel",
@@ -346,7 +346,7 @@
                     "showValidations": false,
                     "theme": "info",
                     "tableView": false,
-                    "key": "ok",
+                    "key": "OkayButton",
                     "type": "button",
                     "input": true
                   }
