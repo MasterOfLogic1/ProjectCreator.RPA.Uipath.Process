@@ -161,11 +161,11 @@ ProjectName/
 ## Usage
 
 1. **Start the Process**: Run `Main.xaml` in UiPath Studio or from Orchestrator or Uipath assitant.
-2. **Fill the Form**: Enter project details in the interactive form
+2. **Fill the Form**: Enter project details in the interactive form and click create
 ![alt text](Guide.png)
-3. **Create Project**: Click "Create" to start the automation
-5. **Wait for job to finish**: Relax and let project creator automation work for you.
-6. **Complete**: Review the success message and created resources
+3. **Wait for job to finish**: Relax and let project creator automation work for you.
+![alt text](image-3.png)
+4. **Complete**: Review the success message and created resources
 
 ## Error Handling
 
