@@ -160,11 +160,11 @@ ProjectName/
 
 ## Usage
 
-1. **Start the Process**: Run `Main.xaml` in UiPath Studio or from Orchestrator
+1. **Start the Process**: Run `Main.xaml` in UiPath Studio or from Orchestrator or Uipath assitant.
 2. **Fill the Form**: Enter project details in the interactive form
-3. **Review Summary**: Check the auto-generated project summary
-4. **Create Project**: Click "Create" to start the automation
-5. **Monitor Progress**: Watch the progress indicators and job responses
+![alt text](Guide.png)
+3. **Create Project**: Click "Create" to start the automation
+5. **Wait for job to finish**: Relax and let project creator automation work for you.
 6. **Complete**: Review the success message and created resources
 
 ## Error Handling
