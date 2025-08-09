@@ -1,0 +1,13 @@
+# Ignore specific directories
+.objects/
+.project/
+.package/
+.screenshots/
+.settings/
+.storage/.runtime/
+.tmh/
+.templates/
+.entities/
+.local/
+*.dll
+.codedworkflows/
