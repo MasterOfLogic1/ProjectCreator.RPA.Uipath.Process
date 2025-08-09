@@ -2,6 +2,8 @@
 
 An automated UiPath RPA process that creates standardized RPA projects with GitHub repository setup, Orchestrator queue creation, and project structure initialization.
 
+![alt text](image.png)
+
 ## Overview
 
 This process automates the creation of new RPA projects by:
