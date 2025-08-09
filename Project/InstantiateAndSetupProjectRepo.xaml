@@ -1,5 +1,6 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="CreateCloneOfSampleProject" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
+    <x:Property Name="jobResponse" Type="OutArgument(x:String)" />
     <x:Property Name="nameOfProject" Type="InArgument(x:String)" />
     <x:Property Name="processDescriptionProvided" Type="InArgument(x:String)" />
     <x:Property Name="readmeContents" Type="InArgument(x:String)" />
@@ -45,6 +46,7 @@
       <x:String>System.Xml.Serialization</x:String>
       <x:String>UiPath.Excel</x:String>
       <x:String>UiPath.Excel.Activities</x:String>
+      <x:String>System.Activities.Runtime.Collections</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -105,125 +107,192 @@
       <AssemblyReference>NPOI.Core</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="CreateCloneOfSampleProject" sap:VirtualizedContainerService.HintSize="1060.8000000000002,1404.8" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="CreateCloneOfSampleProject" sap:VirtualizedContainerService.HintSize="1288,2356" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence sap:VirtualizedContainerService.HintSize="512,1381.6" sap2010:WorkflowViewState.IdRef="Sequence_2">
-      <Sequence.Variables>
-        <Variable x:TypeArguments="x:String" Name="rpaLocalRepository" />
-        <Variable x:TypeArguments="x:String" Name="cloneOfSampleProject" />
-        <Variable x:TypeArguments="x:String" Name="projectJsonContent" />
-      </Sequence.Variables>
+    <Sequence sap2010:Annotation.AnnotationText="Here we create the rpa local folder if they do not exists&#xD;&#xA;delete any residue &#xD;&#xA;copy the sample project to local folder &#xD;&#xA;set up the config files and mailing templates&#xD;&#xA;exit with a response message" sap:VirtualizedContainerService.HintSize="582,2333" sap2010:WorkflowViewState.IdRef="Sequence_9">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478.4,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
-        <ui:MultipleAssign.AssignOperations>
-          <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
-            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
-              <ui:AssignOperation.To>
-                <OutArgument x:TypeArguments="x:String">[rpaLocalRepository]</OutArgument>
-              </ui:AssignOperation.To>
-              <ui:AssignOperation.Value>
-                <InArgument x:TypeArguments="x:String">[in_Config("RpaLocalRepositoryFolder").ToString()]</InArgument>
-              </ui:AssignOperation.Value>
-            </ui:AssignOperation>
-            <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
-              <ui:AssignOperation.To>
-                <OutArgument x:TypeArguments="x:String">[cloneOfSampleProject]</OutArgument>
-              </ui:AssignOperation.To>
-              <ui:AssignOperation.Value>
-                <InArgument x:TypeArguments="x:String">[Path.Combine(rpaLocalRepository,"SampleStandardProcess")]</InArgument>
-              </ui:AssignOperation.Value>
-            </ui:AssignOperation>
-          </scg:List>
-        </ui:MultipleAssign.AssignOperations>
-      </ui:MultipleAssign>
-      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="CreateFoldersIfNotExisting" sap:VirtualizedContainerService.HintSize="478.4,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Project\CreateFoldersIfNotExisting.xaml">
-        <ui:InvokeWorkflowFile.Arguments>
-          <InArgument x:TypeArguments="s:String[]" x:Key="ArrayOfFolders">[{rpaLocalRepository}]</InArgument>
-        </ui:InvokeWorkflowFile.Arguments>
-      </ui:InvokeWorkflowFile>
-      <If sap2010:Annotation.AnnotationText="Delete residual sample folder path if it exists" Condition="[Directory.Exists(cloneOfSampleProject)]" sap:VirtualizedContainerService.HintSize="478.4,100.8" sap2010:WorkflowViewState.IdRef="If_1">
+      <TryCatch sap2010:Annotation.AnnotationText="Here we create the rpa local folder if they do not exists&#xD;&#xA;delete any residue &#xD;&#xA;copy the sample project to local folder &#xD;&#xA;set up the config files and mailing templates&#xD;&#xA;exit with a response message" DisplayName="Try Catch" sap:VirtualizedContainerService.HintSize="548,2156" sap2010:WorkflowViewState.IdRef="TryCatch_1">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-            <x:Boolean x:Key="IsPinned">False</x:Boolean>
             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
-        <If.Then>
-          <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,164" sap2010:WorkflowViewState.IdRef="Sequence_3">
+        <TryCatch.Try>
+          <Sequence DisplayName="Try" sap:VirtualizedContainerService.HintSize="546,1641" sap2010:WorkflowViewState.IdRef="Sequence_6">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <ui:DeleteFolderX DisplayName="Delete Folder" sap:VirtualizedContainerService.HintSize="382.4,104" sap2010:WorkflowViewState.IdRef="DeleteFolderX_1" Path="[cloneOfSampleProject]" Recursive="True" />
+            <Sequence sap2010:Annotation.AnnotationText="Here we create the rpa local folder if they do not exists&#xD;&#xA;delete any residue &#xD;&#xA;copy the sample project to local folder &#xD;&#xA;set up the config files and mailing templates&#xD;&#xA;exit with a response message" DisplayName="Instanitiate Repo" sap:VirtualizedContainerService.HintSize="512,1581" sap2010:WorkflowViewState.IdRef="Sequence_2">
+              <Sequence.Variables>
+                <Variable x:TypeArguments="x:String" Name="rpaLocalRepository" />
+                <Variable x:TypeArguments="x:String" Name="cloneOfSampleProject" />
+                <Variable x:TypeArguments="x:String" Name="projectJsonContent" />
+              </Sequence.Variables>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478,180" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+                <ui:MultipleAssign.AssignOperations>
+                  <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[rpaLocalRepository]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[in_Config("RpaLocalRepositoryFolder").ToString()]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                    <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_2">
+                      <ui:AssignOperation.To>
+                        <OutArgument x:TypeArguments="x:String">[cloneOfSampleProject]</OutArgument>
+                      </ui:AssignOperation.To>
+                      <ui:AssignOperation.Value>
+                        <InArgument x:TypeArguments="x:String">[Path.Combine(rpaLocalRepository,"SampleStandardProcess")]</InArgument>
+                      </ui:AssignOperation.Value>
+                    </ui:AssignOperation>
+                  </scg:List>
+                </ui:MultipleAssign.AssignOperations>
+              </ui:MultipleAssign>
+              <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="CreateFoldersIfNotExisting" sap:VirtualizedContainerService.HintSize="478,177" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Project\CreateFoldersIfNotExisting.xaml">
+                <ui:InvokeWorkflowFile.Arguments>
+                  <InArgument x:TypeArguments="s:String[]" x:Key="ArrayOfFolders">[{rpaLocalRepository}]</InArgument>
+                </ui:InvokeWorkflowFile.Arguments>
+              </ui:InvokeWorkflowFile>
+              <If sap2010:Annotation.AnnotationText="Delete residual sample folder path if it exists" Condition="[Directory.Exists(cloneOfSampleProject)]" sap:VirtualizedContainerService.HintSize="478,88" sap2010:WorkflowViewState.IdRef="If_1">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <If.Then>
+                  <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="416,164" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                    <ui:DeleteFolderX DisplayName="Delete Folder" sap:VirtualizedContainerService.HintSize="382.4,104" sap2010:WorkflowViewState.IdRef="DeleteFolderX_1" Path="[cloneOfSampleProject]" Recursive="True" />
+                  </Sequence>
+                </If.Then>
+                <If.Else>
+                  <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                  </Sequence>
+                </If.Else>
+              </If>
+              <ui:CopyFolderX ContinueOnError="{x:Null}" DisplayName="Copy Folder" From="SampleStandardProcess" sap:VirtualizedContainerService.HintSize="478,193" sap2010:WorkflowViewState.IdRef="CopyFolderX_1" IncludeSubfolders="True" Overwrite="True" To="[rpaLocalRepository]" />
+              <ui:WriteTextFile File="{x:Null}" sap2010:Annotation.AnnotationText="Update readme here using contents from AI" DisplayName="Write Text File" FileName="[Path.Combine(cloneOfSampleProject,&quot;README.md&quot;)]" sap:VirtualizedContainerService.HintSize="478,198" sap2010:WorkflowViewState.IdRef="WriteTextFile_1" Text="[readmeContents]">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+              </ui:WriteTextFile>
+              <Sequence sap2010:Annotation.AnnotationText="Updates project json will relevant info .ie description and process name" sap:VirtualizedContainerService.HintSize="478,88" sap2010:WorkflowViewState.IdRef="Sequence_5">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478.4,149.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
+                  <ui:MultipleAssign.AssignOperations>
+                    <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
+                      <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
+                        <ui:AssignOperation.To>
+                          <OutArgument x:TypeArguments="x:String">[projectJsonContent]</OutArgument>
+                        </ui:AssignOperation.To>
+                        <ui:AssignOperation.Value>
+                          <InArgument x:TypeArguments="x:String">[File.ReadAllText(Path.Combine(cloneOfSampleProject,"project.json")).Replace("SampleStandardProcessDescription",processDescriptionProvided).Replace("SampleStandardProcess", nameOfProject)]</InArgument>
+                        </ui:AssignOperation.Value>
+                      </ui:AssignOperation>
+                    </scg:List>
+                  </ui:MultipleAssign.AssignOperations>
+                </ui:MultipleAssign>
+                <ui:DeleteFileX DisplayName="Delete File" sap:VirtualizedContainerService.HintSize="478.4,112.8" sap2010:WorkflowViewState.IdRef="DeleteFileX_1" Path="[Path.Combine(cloneOfSampleProject,&quot;project.json&quot;)]" />
+                <ui:WriteTextFile File="{x:Null}" DisplayName="Write Text File" FileName="[Path.Combine(cloneOfSampleProject,&quot;project.json&quot;)]" sap:VirtualizedContainerService.HintSize="478.4,157.6" sap2010:WorkflowViewState.IdRef="WriteTextFile_2" Text="[projectJsonContent]" />
+              </Sequence>
+              <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="UpdateConfigurationFile" sap:VirtualizedContainerService.HintSize="478,177" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Project\UpdateConfigurationFile.xaml">
+                <ui:InvokeWorkflowFile.Arguments>
+                  <InArgument x:TypeArguments="x:String" x:Key="in_CloneOfSampleProject">[cloneOfSampleProject]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="in_NameOfProject">[nameOfProject]</InArgument>
+                  <InArgument x:TypeArguments="x:String" x:Key="selectedOrchestratorFolder">[selectedOrchestratorFolder]</InArgument>
+                </ui:InvokeWorkflowFile.Arguments>
+              </ui:InvokeWorkflowFile>
+              <ui:RenameFolderX sap2010:Annotation.AnnotationText="Rename residual folder path to samplefolder" DisplayName="Rename Folder" FolderPath="[cloneOfSampleProject]" sap:VirtualizedContainerService.HintSize="478,197" sap2010:WorkflowViewState.IdRef="RenameFolderX_1" NewName="[nameOfProject]">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+              </ui:RenameFolderX>
+              <Assign sap:VirtualizedContainerService.HintSize="478,106" sap2010:WorkflowViewState.IdRef="Assign_2">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[jobResponse]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">["Your project has been created on this computer at "+Path.Combine(rpaLocalRepository,nameOfProject)]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
           </Sequence>
-        </If.Then>
-        <If.Else>
-          <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="416,89.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
+        </TryCatch.Try>
+        <TryCatch.Catches>
+          <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+            <ActivityAction x:TypeArguments="s:Exception">
+              <ActivityAction.Argument>
+                <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+              </ActivityAction.Argument>
+              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="546,166" sap2010:WorkflowViewState.IdRef="Sequence_7">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <Assign sap:VirtualizedContainerService.HintSize="512,106" sap2010:WorkflowViewState.IdRef="Assign_1">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">[jobResponse]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">failed</InArgument>
+                  </Assign.Value>
+                </Assign>
+              </Sequence>
+            </ActivityAction>
+          </Catch>
+        </TryCatch.Catches>
+        <TryCatch.Finally>
+          <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="546,90" sap2010:WorkflowViewState.IdRef="Sequence_8">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
           </Sequence>
-        </If.Else>
-      </If>
-      <ui:CopyFolderX ContinueOnError="{x:Null}" DisplayName="Copy Folder" From="SampleStandardProcess" sap:VirtualizedContainerService.HintSize="478.4,192" sap2010:WorkflowViewState.IdRef="CopyFolderX_1" IncludeSubfolders="True" Overwrite="True" To="[rpaLocalRepository]" />
-      <ui:WriteTextFile File="{x:Null}" sap2010:Annotation.AnnotationText="Update readme here using contents from AI" DisplayName="Write Text File" FileName="[Path.Combine(cloneOfSampleProject,&quot;README.md&quot;)]" sap:VirtualizedContainerService.HintSize="478.4,197.6" sap2010:WorkflowViewState.IdRef="WriteTextFile_1" Text="[readmeContents]">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </ui:WriteTextFile>
-      <Sequence sap2010:Annotation.AnnotationText="Updates project json will relevant info .ie description and process name" sap:VirtualizedContainerService.HintSize="478.4,88" sap2010:WorkflowViewState.IdRef="Sequence_5">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-        <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478.4,149.6" sap2010:WorkflowViewState.IdRef="MultipleAssign_2">
-          <ui:MultipleAssign.AssignOperations>
-            <scg:List x:TypeArguments="ui:AssignOperation" Capacity="4">
-              <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_3">
-                <ui:AssignOperation.To>
-                  <OutArgument x:TypeArguments="x:String">[projectJsonContent]</OutArgument>
-                </ui:AssignOperation.To>
-                <ui:AssignOperation.Value>
-                  <InArgument x:TypeArguments="x:String">[File.ReadAllText(Path.Combine(cloneOfSampleProject,"project.json")).Replace("SampleStandardProcessDescription",processDescriptionProvided).Replace("SampleStandardProcess", nameOfProject)]</InArgument>
-                </ui:AssignOperation.Value>
-              </ui:AssignOperation>
-            </scg:List>
-          </ui:MultipleAssign.AssignOperations>
-        </ui:MultipleAssign>
-        <ui:DeleteFileX DisplayName="Delete File" sap:VirtualizedContainerService.HintSize="478.4,112.8" sap2010:WorkflowViewState.IdRef="DeleteFileX_1" Path="[Path.Combine(cloneOfSampleProject,&quot;project.json&quot;)]" />
-        <ui:WriteTextFile File="{x:Null}" DisplayName="Write Text File" FileName="[Path.Combine(cloneOfSampleProject,&quot;project.json&quot;)]" sap:VirtualizedContainerService.HintSize="478.4,157.6" sap2010:WorkflowViewState.IdRef="WriteTextFile_2" Text="[projectJsonContent]" />
-      </Sequence>
-      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="UpdateConfigurationFile" sap:VirtualizedContainerService.HintSize="478.4,176" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Project\UpdateConfigurationFile.xaml">
-        <ui:InvokeWorkflowFile.Arguments>
-          <InArgument x:TypeArguments="x:String" x:Key="in_CloneOfSampleProject">[cloneOfSampleProject]</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="in_NameOfProject">[nameOfProject]</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="selectedOrchestratorFolder">[selectedOrchestratorFolder]</InArgument>
-        </ui:InvokeWorkflowFile.Arguments>
-      </ui:InvokeWorkflowFile>
-      <ui:RenameFolderX sap2010:Annotation.AnnotationText="Rename residual folder path to samplefolder" DisplayName="Rename Folder" FolderPath="[cloneOfSampleProject]" sap:VirtualizedContainerService.HintSize="478.4,188" sap2010:WorkflowViewState.IdRef="RenameFolderX_1" NewName="[nameOfProject]">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </ui:RenameFolderX>
+        </TryCatch.Finally>
+      </TryCatch>
     </Sequence>
   </Sequence>
 </Activity>

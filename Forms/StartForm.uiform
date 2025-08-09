@@ -94,7 +94,7 @@
                     "validate": {
                       "required": true,
                       "customMessage": "Must start with a capital letter. Only letters, numbers, and spaces allowed. Do not include 'robot', 'automation', or 'process'.",
-                      "custom": "valid = /^[A-Z][a-zA-Z0-9 ]*$/.test(input) && !/(robot|automation|process)/i.test(input) && (!data.existingProcesses || !data.existingProcesses.includes(input));"
+                      "custom": "valid = /^[A-Z][a-zA-Z0-9 ]*$/.test(input) && !/(robot|automation|process|queue|asset|orchestrator|tenant)/i.test(input) && (!data.existingProcesses || !data.existingProcesses.includes(input));"
                     },
                     "key": "ProjectName",
                     "type": "textfield",
@@ -324,7 +324,7 @@
                 "components": [
                   {
                     "tag": "h2",
-                    "content": "\"Successfully Created\"",
+                    "content": "Success",
                     "key": "label",
                     "input": false,
                     "tableView": false,
@@ -332,13 +332,11 @@
                     "type": "label"
                   },
                   {
-                    "type": "content",
-                    "label": "Project Summary",
-                    "key": "projectSummary1",
-                    "html": "{{ data.ProjectName ? '<strong>Expected Credential Asset Name:</strong> ' + data.ProjectName + '_SampleAppLoginCredential<br><strong>Expected Storage Bucket:</strong> ' + data.ProjectName + 'Bucket' : '' }}",
-                    "refreshOnChange": true,
+                    "key": "JobResponse",
                     "input": false,
-                    "tableView": false
+                    "tableView": false,
+                    "label": "Label",
+                    "type": "label"
                   },
                   {
                     "label": "Ok",

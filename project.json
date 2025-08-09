@@ -6,6 +6,7 @@
   "dependencies": {
     "UiPath.Excel.Activities": "[3.1.1]",
     "UiPath.Form.Activities": "[25.4.3]",
+    "UiPath.IntegrationService.Activities": "[1.15.0]",
     "UiPath.System.Activities": "[25.6.1]",
     "UiPath.WebAPI.Activities": "[2.0.0-preview]"
   },

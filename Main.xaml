@@ -32,6 +32,7 @@
       <x:String>UiPath.Forms.Activities.Base</x:String>
       <x:String>UiPath.Studio.Forms.Runtime</x:String>
       <x:String>System.Activities.Runtime.Collections</x:String>
+      <x:String>UiPath.IntegrationService.Activities.SWEntities.CEB42AD8444_v2_sub_generateChatCompletion_Create.Bundle</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -88,9 +89,10 @@
       <AssemblyReference>System.IO.Packaging</AssemblyReference>
       <AssemblyReference>System.IO.FileSystem.AccessControl</AssemblyReference>
       <AssemblyReference>System.IO.FileSystem.DriveInfo</AssemblyReference>
+      <AssemblyReference>CEB42AD8444_v2_sub_g.bgWwA1YzVxD1TXp2j5KmvW2</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="1338,2809" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="902,2709.6" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="externalFormError" />
     </Sequence.Variables>
@@ -99,9 +101,9 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence sap:VirtualizedContainerService.HintSize="548,2786" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <Sequence sap:VirtualizedContainerService.HintSize="547.2,2686.4" sap2010:WorkflowViewState.IdRef="Sequence_2">
       <Sequence.Variables>
-        <Variable x:TypeArguments="x:String" Name="projectDescription" />
+        <Variable x:TypeArguments="x:String" Name="githubRepoDescription" />
         <Variable x:TypeArguments="x:String" Name="queueName" />
         <Variable x:TypeArguments="x:String" Name="githubRepoName" />
         <Variable x:TypeArguments="x:String" Name="projectName" />
@@ -118,7 +120,7 @@
           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="First intialize the configurations which holds variables of this process" DisplayName="InitializeConfig" sap:VirtualizedContainerService.HintSize="514,222" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Project\InitializeConfig.xaml">
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="First intialize the configurations which holds variables of this process" DisplayName="InitializeConfig" sap:VirtualizedContainerService.HintSize="513.6,220.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Project\InitializeConfig.xaml">
         <ui:InvokeWorkflowFile.Arguments>
           <InArgument x:TypeArguments="x:String" x:Key="in_ConfigFile">Data\Config.xlsx</InArgument>
           <InArgument x:TypeArguments="s:String[]" x:Key="in_ConfigSheets">[{"Settings"}]</InArgument>
@@ -130,7 +132,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </ui:InvokeWorkflowFile>
-      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Load input form and collect user input" DisplayName="GetProjectDetails" sap:VirtualizedContainerService.HintSize="514,208" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Project\GetProjectDetails.xaml">
+      <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Load input form and collect user input" DisplayName="GetProjectDetails" sap:VirtualizedContainerService.HintSize="513.6,207.2" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Project\GetProjectDetails.xaml">
         <ui:InvokeWorkflowFile.Arguments>
           <OutArgument x:TypeArguments="x:String" x:Key="readmeContents">[readmeContents]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="projectName">[projectName]</OutArgument>
@@ -140,9 +142,9 @@
           <OutArgument x:TypeArguments="x:String" x:Key="shouldUseUniqueQueueReference">[shouldUseUniqueQueueReference]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="createButton">[createButton]</OutArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="cancelButton">[cancelButton]</OutArgument>
-          <OutArgument x:TypeArguments="x:String" x:Key="processDescription">[projectDescription]</OutArgument>
           <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="in_Config">[config]</InArgument>
           <OutArgument x:TypeArguments="x:String" x:Key="orchestratorFolder">[orchestratorFolder]</OutArgument>
+          <OutArgument x:TypeArguments="x:String" x:Key="githubRepoDescription">[githubRepoDescription]</OutArgument>
         </ui:InvokeWorkflowFile.Arguments>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -150,7 +152,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </ui:InvokeWorkflowFile>
-      <If sap2010:Annotation.AnnotationText="1.) Instntiate and setup project repository&#xD;&#xA;&#xD;&#xA;2.) Create queue needed by the target process" Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="514,2129" sap2010:WorkflowViewState.IdRef="If_1">
+      <If sap2010:Annotation.AnnotationText="1.) Instntiate and setup project repository&#xA;&#xA;2.) Create queue needed by the target process" Condition="[createButton.ToLower().Equals(&quot;true&quot;)]" sap:VirtualizedContainerService.HintSize="513.6,2031.2" sap2010:WorkflowViewState.IdRef="If_1">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -159,7 +161,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
         <If.Then>
-          <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,1839" sap2010:WorkflowViewState.IdRef="Sequence_3">
+          <Sequence DisplayName="Then" sap:VirtualizedContainerService.HintSize="512,1742.4" sap2010:WorkflowViewState.IdRef="Sequence_3">
             <Sequence.Variables>
               <Variable x:TypeArguments="x:String" Name="localRepoPath" />
               <Variable x:TypeArguments="x:String" Name="githubOrganizationName" />
@@ -167,13 +169,16 @@
               <Variable x:TypeArguments="x:String" Name="githubPersonalAccessToken" />
               <Variable x:TypeArguments="x:String" Name="GithubCreateRepoApiUri" />
               <Variable x:TypeArguments="x:String" Name="OkayButton" />
+              <Variable x:TypeArguments="x:String" Name="jobResponse1" />
+              <Variable x:TypeArguments="x:String" Name="jobResponse2" />
+              <Variable x:TypeArguments="x:String" Name="jobResponse3" />
             </Sequence.Variables>
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <Assign sap2010:Annotation.AnnotationText="Reset external error message" sap:VirtualizedContainerService.HintSize="478,146" sap2010:WorkflowViewState.IdRef="Assign_2">
+            <Assign sap2010:Annotation.AnnotationText="Reset external error message" sap:VirtualizedContainerService.HintSize="478.4,144.8" sap2010:WorkflowViewState.IdRef="Assign_2">
               <Assign.To>
                 <OutArgument x:TypeArguments="x:String">[externalFormError]</OutArgument>
               </Assign.To>
@@ -188,80 +193,37 @@
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
             </Assign>
-            <TryCatch sap2010:Annotation.AnnotationText="1.) Instntiate and setup project repository&#xD;&#xA;&#xD;&#xA;2.) Create queue needed by the target process" DisplayName="Try Further Action" sap:VirtualizedContainerService.HintSize="478,958" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Instntiate and setup project repository" DisplayName="InstantiateAndSetupProjectRepo" sap:VirtualizedContainerService.HintSize="478.4,207.2" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Project\InstantiateAndSetupProjectRepo.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <OutArgument x:TypeArguments="x:String" x:Key="jobResponse">[jobResponse1]</OutArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="nameOfProject">[projectName]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="processDescriptionProvided">[githubRepoDescription]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="readmeContents">[readmeContents]</InArgument>
+                <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="in_Config">[config]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="selectedOrchestratorFolder">[orchestratorFolder]</InArgument>
+              </ui:InvokeWorkflowFile.Arguments>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
                   <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <TryCatch.Try>
-                <Sequence sap2010:Annotation.AnnotationText="Instntiate and setup project repository" DisplayName="Try" sap:VirtualizedContainerService.HintSize="468,467" sap2010:WorkflowViewState.IdRef="Sequence_5">
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                  <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Instntiate and setup project repository" DisplayName="InstantiateAndSetupProjectRepo" sap:VirtualizedContainerService.HintSize="434,208" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Project\InstantiateAndSetupProjectRepo.xaml">
-                    <ui:InvokeWorkflowFile.Arguments>
-                      <InArgument x:TypeArguments="x:String" x:Key="nameOfProject">[projectName]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="processDescriptionProvided">[projectDescription]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="readmeContents">[readmeContents]</InArgument>
-                      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="in_Config">[config]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="selectedOrchestratorFolder">[orchestratorFolder]</InArgument>
-                    </ui:InvokeWorkflowFile.Arguments>
-                    <sap:WorkflowViewStateService.ViewState>
-                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                      </scg:Dictionary>
-                    </sap:WorkflowViewStateService.ViewState>
-                  </ui:InvokeWorkflowFile>
-                  <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="CreateQueueIfNotExisting" sap:VirtualizedContainerService.HintSize="434,168" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="CreateQueueIfNotExisting.xaml">
-                    <ui:InvokeWorkflowFile.Arguments>
-                      <InArgument x:TypeArguments="x:String" x:Key="orchestratorFolderName">[orchestratorFolder]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="queueDescription">["conatins transaction data to be processed by the "+ projectName+" process"]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="queueName">[queueName]</InArgument>
-                    </ui:InvokeWorkflowFile.Arguments>
-                  </ui:InvokeWorkflowFile>
-                </Sequence>
-              </TryCatch.Try>
-              <TryCatch.Catches>
-                <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
-                  <ActivityAction x:TypeArguments="s:Exception">
-                    <ActivityAction.Argument>
-                      <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
-                    </ActivityAction.Argument>
-                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,166" sap2010:WorkflowViewState.IdRef="Sequence_6">
-                      <sap:WorkflowViewStateService.ViewState>
-                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                        </scg:Dictionary>
-                      </sap:WorkflowViewStateService.ViewState>
-                      <Assign sap:VirtualizedContainerService.HintSize="434,106" sap2010:WorkflowViewState.IdRef="Assign_1">
-                        <Assign.To>
-                          <OutArgument x:TypeArguments="x:String">[externalFormError]</OutArgument>
-                        </Assign.To>
-                        <Assign.Value>
-                          <InArgument x:TypeArguments="x:String">[exception.Message]</InArgument>
-                        </Assign.Value>
-                      </Assign>
-                    </Sequence>
-                  </ActivityAction>
-                </Catch>
-              </TryCatch.Catches>
-              <TryCatch.Finally>
-                <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="468,90" sap2010:WorkflowViewState.IdRef="Sequence_7">
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                </Sequence>
-              </TryCatch.Finally>
-            </TryCatch>
-            <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478,273" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
+            </ui:InvokeWorkflowFile>
+            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="create a queue if not existing" DisplayName="CreateQueueIfNotExisting" sap:VirtualizedContainerService.HintSize="478.4,207.2" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="Project\CreateQueueIfNotExisting.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="x:Boolean" x:Key="shouldCreateQueue">[Boolean.Parse(shouldCreateQueue)]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="shouldEnforceUniqueReference">[shouldUseUniqueQueueReference]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="orchestratorFolderName">[orchestratorFolder]</InArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="jobResponse">[jobResponse2]</OutArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="queueName">[queueName]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="queueDescription">["This queue holds transaction data that would be processed by "+ projectName+" process."]</InArgument>
+              </ui:InvokeWorkflowFile.Arguments>
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+            </ui:InvokeWorkflowFile>
+            <ui:MultipleAssign DisplayName="Multiple Assign" sap:VirtualizedContainerService.HintSize="478.4,274.4" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
               <ui:MultipleAssign.AssignOperations>
                 <scg:List x:TypeArguments="ui:AssignOperation" Capacity="8">
                   <ui:AssignOperation sap2010:WorkflowViewState.IdRef="AssignOperation_1">
@@ -307,81 +269,31 @@
                 </scg:List>
               </ui:MultipleAssign.AssignOperations>
             </ui:MultipleAssign>
-            <TryCatch sap2010:Annotation.AnnotationText="Starts by createing the repo in git hub&#xD;&#xA;initialize repo in local &#xD;&#xA;and pushing to remote url" DisplayName="Try Further Action" sap:VirtualizedContainerService.HintSize="478,118" sap2010:WorkflowViewState.IdRef="TryCatch_3">
+            <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="1.) starts by creating the repo in gitHub&#xA;2.) Initialize repo in local &#xA;3.) pushing to remote url" DisplayName="PushToGithub " sap:VirtualizedContainerService.HintSize="478.4,236.8" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="Project\SetupGithubRepository.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="x:String" x:Key="localRepoPath">[localRepoPath]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="githubOrganizationName">[githubOrganizationName]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="githubUsername">[githubUsername]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="githubPersonalAccessToken">[githubPersonalAccessToken]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="githubRepoNameToCreate">[githubRepoName]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="githubRepoDescription">[githubRepoDescription]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="githubCreateRepoApiUri">[githubCreateRepoApiUri]</InArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="jobResponse">[jobResponse3]</OutArgument>
+              </ui:InvokeWorkflowFile.Arguments>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
                   <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <TryCatch.Try>
-                <Sequence sap2010:Annotation.AnnotationText="Starts by createing the repo in git hub&#xD;&#xA;initialize repo in local &#xD;&#xA;and pushing to remote url" DisplayName="Try" sap:VirtualizedContainerService.HintSize="468,350" sap2010:WorkflowViewState.IdRef="Sequence_11">
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                      <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                  <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Starts by createing the repo in git hub&#xD;&#xA;initialize repo in local &#xD;&#xA;and pushing to remote url" DisplayName="PushToGithub " sap:VirtualizedContainerService.HintSize="434,229" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="SetupGithubRepository.xaml">
-                    <ui:InvokeWorkflowFile.Arguments>
-                      <InArgument x:TypeArguments="x:String" x:Key="localRepoPath">[localRepoPath]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="githubOrganizationName">[githubOrganizationName]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="githubUsername">[githubUsername]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="githubPersonalAccessToken">[githubPersonalAccessToken]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="githubRepoNameToCreate">[githubRepoName]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="githubRepoDescription">[projectDescription]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="githubCreateRepoApiUri">[githubCreateRepoApiUri]</InArgument>
-                    </ui:InvokeWorkflowFile.Arguments>
-                    <sap:WorkflowViewStateService.ViewState>
-                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                      </scg:Dictionary>
-                    </sap:WorkflowViewStateService.ViewState>
-                  </ui:InvokeWorkflowFile>
-                </Sequence>
-              </TryCatch.Try>
-              <TryCatch.Catches>
-                <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_3">
-                  <ActivityAction x:TypeArguments="s:Exception">
-                    <ActivityAction.Argument>
-                      <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
-                    </ActivityAction.Argument>
-                    <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="468,166" sap2010:WorkflowViewState.IdRef="Sequence_12">
-                      <sap:WorkflowViewStateService.ViewState>
-                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                        </scg:Dictionary>
-                      </sap:WorkflowViewStateService.ViewState>
-                      <Assign sap:VirtualizedContainerService.HintSize="434,106" sap2010:WorkflowViewState.IdRef="Assign_5">
-                        <Assign.To>
-                          <OutArgument x:TypeArguments="x:String">[externalFormError]</OutArgument>
-                        </Assign.To>
-                        <Assign.Value>
-                          <InArgument x:TypeArguments="x:String">[exception.Message]</InArgument>
-                        </Assign.Value>
-                      </Assign>
-                    </Sequence>
-                  </ActivityAction>
-                </Catch>
-              </TryCatch.Catches>
-              <TryCatch.Finally>
-                <Sequence DisplayName="Finally" sap:VirtualizedContainerService.HintSize="468,90" sap2010:WorkflowViewState.IdRef="Sequence_13">
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                </Sequence>
-              </TryCatch.Finally>
-            </TryCatch>
-            <ufa:SetFormFieldsActivity InstanceName="{x:Null}" sap2010:Annotation.AnnotationText="Show completion page" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478,205" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_1">
+            </ui:InvokeWorkflowFile>
+            <ufa:SetFormFieldsActivity InstanceName="{x:Null}" sap2010:Annotation.AnnotationText="Show completion page" DisplayName="Set Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="478.4,204" sap2010:WorkflowViewState.IdRef="SetFormFieldsActivity_1">
               <ufa:SetFormFieldsActivity.Arguments>
                 <InArgument x:TypeArguments="x:String" x:Key="showInputPanel">false</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="ProjectName">[projectName]</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="showSpinner">false</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="showCompletePanel">true</InArgument>
                 <InArgument x:TypeArguments="x:String" x:Key="externalFormError">[externalFormError]</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="JobResponse">[jobResponse1+"&lt;br&gt;"+ jobResponse2+"&lt;br&gt;"+ jobResponse3]</InArgument>
               </ufa:SetFormFieldsActivity.Arguments>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -389,29 +301,26 @@
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
             </ufa:SetFormFieldsActivity>
-            <ui:InterruptibleDoWhile CurrentIndex="{x:Null}" sap2010:Annotation.AnnotationText="Wait for okay button" DisplayName="Do While" sap:VirtualizedContainerService.HintSize="452,386" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_1">
+            <ui:InterruptibleDoWhile CurrentIndex="{x:Null}" sap2010:Annotation.AnnotationText="Wait for okay button" Condition="[Not OkayButton.Equals(&quot;true&quot;)]" DisplayName="Do While" sap:VirtualizedContainerService.HintSize="478.4,408" sap2010:WorkflowViewState.IdRef="InterruptibleDoWhile_1">
               <ui:InterruptibleDoWhile.Body>
-                <Sequence sap2010:Annotation.AnnotationText="Wait for okay button" DisplayName="Body" sap:VirtualizedContainerService.HintSize="450,256" sap2010:WorkflowViewState.IdRef="Sequence_15">
+                <Sequence sap2010:Annotation.AnnotationText="Wait for okay button" DisplayName="Body" sap:VirtualizedContainerService.HintSize="449.6,255.2" sap2010:WorkflowViewState.IdRef="Sequence_15">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                       <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <ufa:GetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Get Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="416,165" sap2010:WorkflowViewState.IdRef="GetFormFieldsActivity_1">
+                  <ufa:GetFormFieldsActivity InstanceName="{x:Null}" DisplayName="Get Form Values" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="416,164" sap2010:WorkflowViewState.IdRef="GetFormFieldsActivity_1">
                     <ufa:GetFormFieldsActivity.Arguments>
                       <OutArgument x:TypeArguments="x:String" x:Key="OkayButton">[OkayButton]</OutArgument>
                     </ufa:GetFormFieldsActivity.Arguments>
                   </ufa:GetFormFieldsActivity>
                 </Sequence>
               </ui:InterruptibleDoWhile.Body>
-              <ui:InterruptibleDoWhile.Condition>
-                <VisualBasicValue x:TypeArguments="x:Boolean" DisplayName="Visual basic value" ExpressionText="Not OkayButton.Equals(&quot;true&quot;)" />
-              </ui:InterruptibleDoWhile.Condition>
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
-                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   <x:Boolean x:Key="IsPinned">False</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
@@ -419,7 +328,7 @@
           </Sequence>
         </If.Then>
         <If.Else>
-          <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="512,90" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <Sequence DisplayName="Else" sap:VirtualizedContainerService.HintSize="512,89.6" sap2010:WorkflowViewState.IdRef="Sequence_4">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -428,7 +337,7 @@
           </Sequence>
         </If.Else>
       </If>
-      <ufa:CloseFormActivity InstanceName="{x:Null}" sap2010:Annotation.AnnotationText="Close form because player has made a selection" DisplayName="Close Form" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="514,144" sap2010:WorkflowViewState.IdRef="CloseFormActivity_3">
+      <ufa:CloseFormActivity InstanceName="{x:Null}" sap2010:Annotation.AnnotationText="Close form because player has made a selection" DisplayName="Close Form" FormId="fe88d951-b636-4948-9fc7-eaac1cce36ef" sap:VirtualizedContainerService.HintSize="513.6,144" sap2010:WorkflowViewState.IdRef="CloseFormActivity_3">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
