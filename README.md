@@ -125,13 +125,15 @@ Created projects follow this standardized structure:
 ProjectName/
 ├── Data/
 │   └── Config.xlsx
-├── Documentation/
-├── Framework/
+│   └── EmailTemplates/ - all mailing templates used by the process
+├── Documentation/ - all neccesary documentation goes here
+├── Framework/ - all Re-Framework standards go here
 ├── Main.xaml
 ├── project.json
 ├── README.md
-├── Reusable_Components/
-└── Tests/
+├── Reusable_Components/ - should contain workflows that can be reused or shard among processes
+├── Project/ - should contain workflows strongly tied to related project
+└── Tests/ - for testing
 ```
 
 ## Getting Started
